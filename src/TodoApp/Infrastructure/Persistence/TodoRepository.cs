@@ -78,6 +78,10 @@ public sealed class TodoRepository : ITodoRepository
         return true;
     }
 
+    /// <summary>
+    /// Removes all completed todo items from the storage.
+    /// </summary>
+    /// <returns>The number of items successfully removed.</returns>
     public int RemoveCompleted()
     {
         var todos = Load();
