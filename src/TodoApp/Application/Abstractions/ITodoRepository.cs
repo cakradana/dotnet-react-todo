@@ -15,4 +15,10 @@ public interface ITodoRepository
     bool Delete(long id);
 
     bool ToggleCompleted(long id);
+
+    /// <summary>
+    /// Removes all completed todo items from the repository.
+    /// </summary>
+    /// <returns>The number of items removed.</returns>
+    int RemoveCompleted();
 }
