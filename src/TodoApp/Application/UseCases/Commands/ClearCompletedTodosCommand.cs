@@ -9,6 +9,10 @@ public sealed class ClearCompletedTodosCommand
 {
     private readonly ITodoRepository repository;
 
+    /// <summary>
+    /// Initializes a new <see cref="ClearCompletedTodosCommand"/> with the specified todo repository.
+    /// </summary>
+    /// <param name="repository">Repository used to remove completed todo items.</param>
     public ClearCompletedTodosCommand(ITodoRepository repository)
     {
     /// <summary>
@@ -18,6 +22,10 @@ public sealed class ClearCompletedTodosCommand
         this.repository = repository;
     }
 
+    /// <summary>
+    /// Clears all completed todo items from the repository and returns how many were removed.
+    /// </summary>
+    /// <returns>The number of completed todo items that were removed.</returns>
     public async Task<int> ExecuteAsync()
     {
         return await repository.RemoveCompletedAsync();
