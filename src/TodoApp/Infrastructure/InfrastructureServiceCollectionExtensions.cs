@@ -7,6 +7,11 @@ namespace TodoApp.Infrastructure;
 
 public static class InfrastructureServiceCollectionExtensions
 {
+    /// <summary>
+    /// Registers infrastructure services into the DI container, including the EF Core TodoDbContext configured for SQLite and the scoped ITodoRepository implementation.
+    /// </summary>
+    /// <param name="connectionString">SQLite connection string used to configure the TodoDbContext.</param>
+    /// <returns>The same <see cref="IServiceCollection"/> instance after registering infrastructure services.</returns>
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, string connectionString)
     {
         if (string.IsNullOrWhiteSpace(connectionString))
