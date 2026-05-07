@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="src/TodoApp/TodoApp.csproj" />
+  <Project Path="src/TodoApp.Api/TodoApp.Api.csproj" />
 </Solution>
