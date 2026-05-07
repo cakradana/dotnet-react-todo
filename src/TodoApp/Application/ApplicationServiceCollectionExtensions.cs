@@ -14,6 +14,7 @@ public static class ApplicationServiceCollectionExtensions
         services.AddTransient<UpdateTodoCommand>();
         services.AddTransient<DeleteTodoCommand>();
         services.AddTransient<ToggleTodoCommand>();
+        services.AddTransient<ClearCompletedTodosCommand>();
 
         return services;
     }

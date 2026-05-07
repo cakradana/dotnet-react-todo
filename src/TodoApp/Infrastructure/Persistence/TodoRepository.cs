@@ -78,6 +78,19 @@ public sealed class TodoRepository : ITodoRepository
         return true;
     }
 
+    public int RemoveCompleted()
+    {
+        var todos = Load();
+        var removedCount = todos.RemoveAll(todo => todo.IsCompleted);
+
+        if (removedCount > 0)
+        {
+            Save(todos);
+        }
+
+        return removedCount;
+    }
+
     private List<TodoItem> Load()
     {
         if (!File.Exists(filePath))

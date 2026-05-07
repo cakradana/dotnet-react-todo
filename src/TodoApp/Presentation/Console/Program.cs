@@ -17,6 +17,7 @@ var createTodoCommand = serviceProvider.GetRequiredService<CreateTodoCommand>();
 var updateTodoCommand = serviceProvider.GetRequiredService<UpdateTodoCommand>();
 var deleteTodoCommand = serviceProvider.GetRequiredService<DeleteTodoCommand>();
 var toggleTodoCommand = serviceProvider.GetRequiredService<ToggleTodoCommand>();
+var clearCompletedCommand = serviceProvider.GetRequiredService<ClearCompletedTodosCommand>();
 
 while (true)
 {
@@ -27,6 +28,7 @@ while (true)
     Console.WriteLine("3. Ubah todo");
     Console.WriteLine("4. Hapus todo");
     Console.WriteLine("5. Toggle selesai");
+    Console.WriteLine("6. Hapus semua todo selesai");
     Console.WriteLine("0. Keluar");
     Console.Write("Pilihan: ");
 
@@ -48,6 +50,9 @@ while (true)
             break;
         case "5":
             ToggleTodo(toggleTodoCommand);
+            break;
+        case "6":
+            ClearCompleted(clearCompletedCommand);
             break;
         case "0":
             return;
@@ -140,6 +145,19 @@ static void ToggleTodo(ToggleTodoCommand toggleTodoCommand)
     }
 
     Console.WriteLine("Todo tidak ditemukan.");
+}
+
+static void ClearCompleted(ClearCompletedTodosCommand clearCompletedCommand)
+{
+    var count = clearCompletedCommand.Execute();
+    if (count > 0)
+    {
+        Console.WriteLine($"{count} todo selesai berhasil dihapus.");
+    }
+    else
+    {
+        Console.WriteLine("Tidak ada todo yang sudah selesai untuk dihapus.");
+    }
 }
 
 static bool TryReadId(out long id)

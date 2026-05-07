@@ -15,4 +15,6 @@ public interface ITodoRepository
     bool Delete(long id);
 
     bool ToggleCompleted(long id);
+
+    int RemoveCompleted();
 }
