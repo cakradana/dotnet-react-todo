@@ -9,9 +9,8 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 // Register TodoApp Layers
-var dataPath = AppPaths.GetTodoFilePath();
-Directory.CreateDirectory(Path.GetDirectoryName(dataPath)!);
-builder.Services.AddInfrastructure(dataPath);
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=todos.db";
+builder.Services.AddInfrastructure(connectionString);
 builder.Services.AddApplication();
 
 var app = builder.Build();

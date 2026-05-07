@@ -13,8 +13,11 @@ public sealed class GetTodosQuery
         this.todoRepository = todoRepository;
     }
 
-    public List<TodoResponse> Execute()
-        => todoRepository.GetAll().Select(MapToResponse).ToList();
+    public async Task<List<TodoResponse>> ExecuteAsync()
+    {
+        var todos = await todoRepository.GetAllAsync();
+        return todos.Select(MapToResponse).ToList();
+    }
 
     private static TodoResponse MapToResponse(TodoItem item)
     {

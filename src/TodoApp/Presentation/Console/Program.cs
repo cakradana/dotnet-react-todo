@@ -6,7 +6,8 @@ using TodoApp.Application.UseCases.Queries;
 using TodoApp.Infrastructure;
 
 var services = new ServiceCollection();
-services.AddInfrastructure(AppPaths.GetTodoFilePath());
+var connectionString = "Data Source=todos.db";
+services.AddInfrastructure(connectionString);
 services.AddApplication();
 
 using var serviceProvider = services.BuildServiceProvider();
@@ -37,22 +38,22 @@ while (true)
     switch (choice)
     {
         case "1":
-            ShowTodos(getTodosQuery.Execute());
+            await ShowTodos(getTodosQuery);
             break;
         case "2":
-            AddTodo(createTodoCommand);
+            await AddTodo(createTodoCommand);
             break;
         case "3":
-            EditTodo(getTodoByIdQuery, updateTodoCommand);
+            await EditTodo(getTodoByIdQuery, updateTodoCommand);
             break;
         case "4":
-            DeleteTodo(deleteTodoCommand);
+            await DeleteTodo(deleteTodoCommand);
             break;
         case "5":
-            ToggleTodo(toggleTodoCommand);
+            await ToggleTodo(toggleTodoCommand);
             break;
         case "6":
-            ClearCompleted(clearCompletedCommand);
+            await ClearCompleted(clearCompletedCommand);
             break;
         case "0":
             return;
@@ -62,8 +63,9 @@ while (true)
     }
 }
 
-static void ShowTodos(List<TodoResponse> todos)
+static async Task ShowTodos(GetTodosQuery getTodosQuery)
 {
+    var todos = await getTodosQuery.ExecuteAsync();
     if (todos.Count == 0)
     {
         Console.WriteLine("Belum ada todo.");
@@ -76,25 +78,25 @@ static void ShowTodos(List<TodoResponse> todos)
     }
 }
 
-static void AddTodo(CreateTodoCommand createTodoCommand)
+static async Task AddTodo(CreateTodoCommand createTodoCommand)
 {
     var task = Prompt("Task");
     var priority = Prompt("Priority (Low/Medium/High)", "Medium");
     var categoryName = Prompt("Category name", "General");
     var categoryColor = Prompt("Category color", "Gray");
 
-    var created = createTodoCommand.Execute(new CreateTodoRequest(task, priority, new TodoCategoryDto(categoryName, categoryColor)));
+    var created = await createTodoCommand.ExecuteAsync(new CreateTodoRequest(task, priority, new TodoCategoryDto(categoryName, categoryColor)));
     Console.WriteLine($"Todo ditambahkan dengan id {created.Id}.");
 }
 
-static void EditTodo(GetTodoByIdQuery getTodoByIdQuery, UpdateTodoCommand updateTodoCommand)
+static async Task EditTodo(GetTodoByIdQuery getTodoByIdQuery, UpdateTodoCommand updateTodoCommand)
 {
     if (!TryReadId(out var id))
     {
         return;
     }
 
-    var existing = getTodoByIdQuery.Execute(id);
+    var existing = await getTodoByIdQuery.ExecuteAsync(id);
     if (existing is null)
     {
         Console.WriteLine("Todo tidak ditemukan.");
@@ -109,20 +111,20 @@ static void EditTodo(GetTodoByIdQuery getTodoByIdQuery, UpdateTodoCommand update
             Prompt("Category name", existing.Category.Name),
             Prompt("Category color", existing.Category.Color)));
 
-    if (updateTodoCommand.Execute(request))
+    if (await updateTodoCommand.ExecuteAsync(request))
     {
         Console.WriteLine("Todo berhasil diubah.");
     }
 }
 
-static void DeleteTodo(DeleteTodoCommand deleteTodoCommand)
+static async Task DeleteTodo(DeleteTodoCommand deleteTodoCommand)
 {
     if (!TryReadId(out var id))
     {
         return;
     }
 
-    if (deleteTodoCommand.Execute(id))
+    if (await deleteTodoCommand.ExecuteAsync(id))
     {
         Console.WriteLine("Todo berhasil dihapus.");
         return;
@@ -131,14 +133,14 @@ static void DeleteTodo(DeleteTodoCommand deleteTodoCommand)
     Console.WriteLine("Todo tidak ditemukan.");
 }
 
-static void ToggleTodo(ToggleTodoCommand toggleTodoCommand)
+static async Task ToggleTodo(ToggleTodoCommand toggleTodoCommand)
 {
     if (!TryReadId(out var id))
     {
         return;
     }
 
-    if (toggleTodoCommand.Execute(id))
+    if (await toggleTodoCommand.ExecuteAsync(id))
     {
         Console.WriteLine("Status todo berhasil diubah.");
         return;
@@ -147,7 +149,7 @@ static void ToggleTodo(ToggleTodoCommand toggleTodoCommand)
     Console.WriteLine("Todo tidak ditemukan.");
 }
 
-static void ClearCompleted(ClearCompletedTodosCommand clearCompletedCommand)
+static async Task ClearCompleted(ClearCompletedTodosCommand clearCompletedCommand)
 {
     Console.Write("Hapus semua todo yang sudah selesai? (y/n): ");
     var confirm = Console.ReadLine();
@@ -157,7 +159,7 @@ static void ClearCompleted(ClearCompletedTodosCommand clearCompletedCommand)
         return;
     }
 
-    var count = clearCompletedCommand.Execute();
+    var count = await clearCompletedCommand.ExecuteAsync();
     if (count > 0)
     {
         Console.WriteLine($"{count} todo selesai berhasil dihapus.");

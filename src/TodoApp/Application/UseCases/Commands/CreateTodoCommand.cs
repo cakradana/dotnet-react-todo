@@ -13,9 +13,9 @@ public sealed class CreateTodoCommand
         this.todoRepository = todoRepository;
     }
 
-    public TodoResponse Execute(CreateTodoRequest request)
+    public async Task<TodoResponse> ExecuteAsync(CreateTodoRequest request)
     {
-        var created = todoRepository.Add(new TodoItem
+        var todo = new TodoItem
         {
             Task = request.Task,
             Priority = request.Priority,
@@ -24,7 +24,9 @@ public sealed class CreateTodoCommand
                 Name = request.Category.Name,
                 Color = request.Category.Color
             }
-        });
+        };
+
+        var created = await todoRepository.AddAsync(todo);
 
         return new TodoResponse(
             created.Id,

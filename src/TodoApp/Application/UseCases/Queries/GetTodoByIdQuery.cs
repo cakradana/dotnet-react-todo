@@ -13,9 +13,9 @@ public sealed class GetTodoByIdQuery
         this.todoRepository = todoRepository;
     }
 
-    public TodoResponse? Execute(long id)
+    public async Task<TodoResponse?> ExecuteAsync(long id)
     {
-        var item = todoRepository.GetById(id);
+        var item = await todoRepository.GetByIdAsync(id);
         if (item is null)
         {
             return null;

@@ -18,8 +18,8 @@ public sealed class ClearCompletedTodosCommand
         this.repository = repository;
     }
 
-    public int Execute()
+    public async Task<int> ExecuteAsync()
     {
-        return repository.RemoveCompleted();
+        return await repository.RemoveCompletedAsync();
     }
 }

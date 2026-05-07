@@ -36,16 +36,16 @@ public class TodosController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<List<TodoResponse>> GetTodos()
+    public async Task<ActionResult<List<TodoResponse>>> GetTodos()
     {
-        var todos = getTodosQuery.Execute();
+        var todos = await getTodosQuery.ExecuteAsync();
         return Ok(todos);
     }
 
     [HttpGet("{id}")]
-    public ActionResult<TodoResponse> GetTodoById(long id)
+    public async Task<ActionResult<TodoResponse>> GetTodoById(long id)
     {
-        var todo = getTodoByIdQuery.Execute(id);
+        var todo = await getTodoByIdQuery.ExecuteAsync(id);
         if (todo is null)
         {
             return NotFound();
@@ -55,21 +55,21 @@ public class TodosController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult<TodoResponse> CreateTodo([FromBody] CreateTodoRequest request)
+    public async Task<ActionResult<TodoResponse>> CreateTodo([FromBody] CreateTodoRequest request)
     {
-        var response = createTodoCommand.Execute(request);
+        var response = await createTodoCommand.ExecuteAsync(request);
         return CreatedAtAction(nameof(GetTodoById), new { id = response.Id }, response);
     }
 
     [HttpPut("{id}")]
-    public IActionResult UpdateTodo(long id, [FromBody] UpdateTodoRequest request)
+    public async Task<IActionResult> UpdateTodo(long id, [FromBody] UpdateTodoRequest request)
     {
         if (id != request.Id)
         {
             return BadRequest("ID routing and payload mismatch.");
         }
 
-        var success = updateTodoCommand.Execute(request);
+        var success = await updateTodoCommand.ExecuteAsync(request);
         if (!success)
         {
             return NotFound();
@@ -79,9 +79,9 @@ public class TodosController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public IActionResult DeleteTodo(long id)
+    public async Task<IActionResult> DeleteTodo(long id)
     {
-        var success = deleteTodoCommand.Execute(id);
+        var success = await deleteTodoCommand.ExecuteAsync(id);
         if (!success)
         {
             return NotFound();
@@ -91,9 +91,9 @@ public class TodosController : ControllerBase
     }
 
     [HttpPatch("{id}/toggle")]
-    public IActionResult ToggleTodo(long id)
+    public async Task<IActionResult> ToggleTodo(long id)
     {
-        var success = toggleTodoCommand.Execute(id);
+        var success = await toggleTodoCommand.ExecuteAsync(id);
         if (!success)
         {
             return NotFound();
@@ -103,9 +103,9 @@ public class TodosController : ControllerBase
     }
 
     [HttpDelete("completed")]
-    public IActionResult ClearCompleted()
+    public async Task<IActionResult> ClearCompleted()
     {
-        var count = clearCompletedCommand.Execute();
+        var count = await clearCompletedCommand.ExecuteAsync();
         return Ok(new { Count = count, Message = $"{count} completed todos removed." });
     }
 }
