@@ -37,7 +37,11 @@ Kita akan tetap bertahap: console app dulu, lalu Web API, kemudian SQLite, dan R
 - Use cases dan contracts sudah dipisah secara modular.
 - Struktur repo sudah dibersihkan dari folder lama yang tidak dipakai.
 - **Langkah 3 (Web API) telah selesai dan teruji.**
-- Siap untuk memulai implementasi Langkah 4 (SQLite).
+- **Langkah 4 (SQLite) telah selesai:**
+  - Migrasi sukses dilakukan dengan EF Core.
+  - Implementasi murni berstandar industri dengan pemisahan *Domain* dan *Fluent API* (`OnModelCreating`).
+  - *Refactoring* penuh ke arsitektur *Asynchronous* (`async/await`) untuk mendukung skenario *Enterprise*.
+- Siap untuk memulai implementasi **Langkah 5 (React UI)**.
 
 ## Relevant files
 
