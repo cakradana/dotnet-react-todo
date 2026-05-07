@@ -10,18 +10,13 @@ namespace TodoApp.UnitTests.Application.UseCases.Commands;
 public class CreateTodoCommandTests
 {
     private readonly Mock<ITodoRepository> _mockRepository;
-    private readonly Mock<FluentValidation.IValidator<CreateTodoRequest>> _mockValidator;
     private readonly CreateTodoCommand _command;
 
     public CreateTodoCommandTests()
     {
         _mockRepository = new Mock<ITodoRepository>();
-        _mockValidator = new Mock<FluentValidation.IValidator<CreateTodoRequest>>();
         
-        _mockValidator.Setup(v => v.ValidateAsync(It.IsAny<FluentValidation.ValidationContext<CreateTodoRequest>>(), default))
-            .ReturnsAsync(new FluentValidation.Results.ValidationResult());
-
-        _command = new CreateTodoCommand(_mockRepository.Object, _mockValidator.Object);
+        _command = new CreateTodoCommand(_mockRepository.Object);
     }
 
     [Fact]

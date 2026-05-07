@@ -25,10 +25,14 @@ var app = builder.Build();
 // Menambahkan Global Exception Handler (sekarang logic ValidationException dipisah di `ValidationExceptionHandler`)
 app.UseExceptionHandler();
 
-// Apply Migrations (Hanya dijalankan otomatis saat di Development)
-if (app.Environment.IsDevelopment())
+// Apply Migrations
+if (app.Environment.IsDevelopment() || args.Contains("--migrate"))
 {
     await app.Services.InitializeDatabaseAsync();
+    if (args.Contains("--migrate"))
+    {
+        return; // Exit after migration if invoked explicitly for migration
+    }
 }
 
 // Configure the HTTP request pipeline.

@@ -24,4 +24,13 @@ public class DeleteTodoCommandTests
         result.Should().BeTrue();
         _mockRepository.Verify(r => r.DeleteAsync(1), Times.Once);
     }
+
+    [Fact]
+    public async Task ExecuteAsync_WhenItemDoesNotExist_ShouldReturnFalse()
+    {
+        _mockRepository.Setup(r => r.DeleteAsync(1)).ReturnsAsync(false);
+        var result = await _command.ExecuteAsync(1);
+        result.Should().BeFalse();
+        _mockRepository.Verify(r => r.DeleteAsync(1), Times.Once);
+    }
 }

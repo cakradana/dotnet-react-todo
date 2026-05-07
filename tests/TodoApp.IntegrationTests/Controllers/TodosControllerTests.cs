@@ -26,6 +26,7 @@ public class TodosControllerTests : IClassFixture<TodoAppFactory>
         var content = await createResponse.Content.ReadAsStringAsync();
         createResponse.StatusCode.Should().Be(HttpStatusCode.Created, content);
         var createdTodo = await createResponse.Content.ReadFromJsonAsync<TodoResponse>();
+        createdTodo.Should().NotBeNull();
         var todoId = createdTodo!.Id;
 
         // 3. Act - Get By Id
@@ -39,9 +40,19 @@ public class TodosControllerTests : IClassFixture<TodoAppFactory>
         var updateResponse = await _client.PutAsJsonAsync($"/api/todos/{todoId}", updateRequest);
         updateResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
+        var verifyUpdateResponse = await _client.GetFromJsonAsync<TodoResponse>($"/api/todos/{todoId}");
+        verifyUpdateResponse.Should().NotBeNull();
+        verifyUpdateResponse!.Task.Should().Be("Updated Text");
+        verifyUpdateResponse.Priority.Should().Be("High");
+        verifyUpdateResponse.Category.Name.Should().Be("Work");
+
         // 5. Act - Toggle
         var toggleResponse = await _client.PatchAsync($"/api/todos/{todoId}/toggle", null);
         toggleResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
+
+        var verifyToggleResponse = await _client.GetFromJsonAsync<TodoResponse>($"/api/todos/{todoId}");
+        verifyToggleResponse.Should().NotBeNull();
+        verifyToggleResponse!.IsCompleted.Should().BeTrue();
 
         // 6. Act - Delete
         var deleteResponse = await _client.DeleteAsync($"/api/todos/{todoId}");

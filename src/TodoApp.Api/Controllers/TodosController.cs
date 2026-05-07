@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using TodoApp.Application.UseCases.Commands;
 using TodoApp.Application.UseCases.Queries;
 using TodoApp.Application.Contracts.Todos;
+using FluentValidation;
 
 namespace TodoApp.Api.Controllers;
 
@@ -16,6 +17,8 @@ public class TodosController : ControllerBase
     private readonly DeleteTodoCommand deleteTodoCommand;
     private readonly ToggleTodoCommand toggleTodoCommand;
     private readonly ClearCompletedTodosCommand clearCompletedCommand;
+    private readonly IValidator<CreateTodoRequest> createTodoValidator;
+    private readonly IValidator<UpdateTodoRequest> updateTodoValidator;
 
     /// <summary>
     /// Initializes a new <see cref="TodosController"/> with the required use-case dependencies.
@@ -27,6 +30,8 @@ public class TodosController : ControllerBase
     /// <param name="deleteTodoCommand">Deletes a todo by its identifier.</param>
     /// <param name="toggleTodoCommand">Toggles the completion state of a todo.</param>
     /// <param name="clearCompletedCommand">Clears all completed todos.</param>
+    /// <param name="createTodoValidator">Validator for create requests.</param>
+    /// <param name="updateTodoValidator">Validator for update requests.</param>
     public TodosController(
         GetTodosQuery getTodosQuery,
         GetTodoByIdQuery getTodoByIdQuery,
@@ -34,7 +39,9 @@ public class TodosController : ControllerBase
         UpdateTodoCommand updateTodoCommand,
         DeleteTodoCommand deleteTodoCommand,
         ToggleTodoCommand toggleTodoCommand,
-        ClearCompletedTodosCommand clearCompletedCommand)
+        ClearCompletedTodosCommand clearCompletedCommand,
+        IValidator<CreateTodoRequest> createTodoValidator,
+        IValidator<UpdateTodoRequest> updateTodoValidator)
     {
         this.getTodosQuery = getTodosQuery;
         this.getTodoByIdQuery = getTodoByIdQuery;
@@ -43,6 +50,8 @@ public class TodosController : ControllerBase
         this.deleteTodoCommand = deleteTodoCommand;
         this.toggleTodoCommand = toggleTodoCommand;
         this.clearCompletedCommand = clearCompletedCommand;
+        this.createTodoValidator = createTodoValidator;
+        this.updateTodoValidator = updateTodoValidator;
     }
 
     /// <summary>
@@ -81,6 +90,7 @@ public class TodosController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<TodoResponse>> CreateTodo([FromBody] CreateTodoRequest request)
     {
+        await createTodoValidator.ValidateAndThrowAsync(request);
         var response = await createTodoCommand.ExecuteAsync(request);
         return CreatedAtAction(nameof(GetTodoById), new { id = response.Id }, response);
     }
@@ -101,6 +111,8 @@ public class TodosController : ControllerBase
         {
             return BadRequest("ID routing and payload mismatch.");
         }
+
+        await updateTodoValidator.ValidateAndThrowAsync(request);
 
         var success = await updateTodoCommand.ExecuteAsync(request);
         if (!success)

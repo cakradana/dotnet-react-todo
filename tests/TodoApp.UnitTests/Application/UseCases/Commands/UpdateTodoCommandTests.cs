@@ -1,6 +1,5 @@
 using Moq;
 using FluentAssertions;
-using FluentValidation;
 using TodoApp.Application.Abstractions;
 using TodoApp.Application.Contracts.Todos;
 using TodoApp.Application.UseCases.Commands;
@@ -11,18 +10,13 @@ namespace TodoApp.UnitTests.Application.UseCases.Commands;
 public class UpdateTodoCommandTests
 {
     private readonly Mock<ITodoRepository> _mockRepository;
-    private readonly Mock<IValidator<UpdateTodoRequest>> _mockValidator;
     private readonly UpdateTodoCommand _command;
 
     public UpdateTodoCommandTests()
     {
         _mockRepository = new Mock<ITodoRepository>();
-        _mockValidator = new Mock<IValidator<UpdateTodoRequest>>();
         
-        _mockValidator.Setup(v => v.ValidateAsync(It.IsAny<ValidationContext<UpdateTodoRequest>>(), default))
-            .ReturnsAsync(new FluentValidation.Results.ValidationResult());
-
-        _command = new UpdateTodoCommand(_mockRepository.Object, _mockValidator.Object);
+        _command = new UpdateTodoCommand(_mockRepository.Object);
     }
 
     [Fact]

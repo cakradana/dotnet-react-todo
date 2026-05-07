@@ -28,6 +28,7 @@ public class ValidationExceptionHandler : IExceptionHandler
         };
 
         httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+        httpContext.Response.ContentType = "application/problem+json";
         await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
 
         // Kembalikan true menandakan error ini sudah berhasil kita tangani
