@@ -11,5 +11,8 @@ public sealed class DeleteTodoCommand
         this.todoRepository = todoRepository;
     }
 
-    public bool Execute(long id) => todoRepository.Delete(id);
+    public async Task<bool> ExecuteAsync(long id)
+    {
+        return await todoRepository.DeleteAsync(id);
+    }
 }

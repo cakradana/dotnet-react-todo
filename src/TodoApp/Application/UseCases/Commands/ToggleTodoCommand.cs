@@ -11,5 +11,5 @@ public sealed class ToggleTodoCommand
         this.todoRepository = todoRepository;
     }
 
-    public bool Execute(long id) => todoRepository.ToggleCompleted(id);
+    public async Task<bool> ExecuteAsync(long id) => await todoRepository.ToggleCompletedAsync(id);
 }

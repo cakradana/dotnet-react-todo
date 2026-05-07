@@ -4,21 +4,21 @@ namespace TodoApp.Application.Abstractions;
 
 public interface ITodoRepository
 {
-    List<TodoItem> GetAll();
+    Task<List<TodoItem>> GetAllAsync();
 
-    TodoItem? GetById(long id);
+    Task<TodoItem?> GetByIdAsync(long id);
 
-    TodoItem Add(TodoItem item);
+    Task<TodoItem> AddAsync(TodoItem item);
 
-    bool Update(TodoItem item);
+    Task<bool> UpdateAsync(TodoItem item);
 
-    bool Delete(long id);
+    Task<bool> DeleteAsync(long id);
 
-    bool ToggleCompleted(long id);
+    Task<bool> ToggleCompletedAsync(long id);
 
     /// <summary>
     /// Removes all completed todo items from the repository.
     /// </summary>
     /// <returns>The number of items removed.</returns>
-    int RemoveCompleted();
+    Task<int> RemoveCompletedAsync();
 }

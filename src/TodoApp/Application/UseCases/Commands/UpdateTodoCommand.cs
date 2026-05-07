@@ -13,9 +13,9 @@ public sealed class UpdateTodoCommand
         this.todoRepository = todoRepository;
     }
 
-    public bool Execute(UpdateTodoRequest request)
+    public async Task<bool> ExecuteAsync(UpdateTodoRequest request)
     {
-        return todoRepository.Update(new TodoItem
+        return await todoRepository.UpdateAsync(new TodoItem
         {
             Id = request.Id,
             Task = request.Task,
