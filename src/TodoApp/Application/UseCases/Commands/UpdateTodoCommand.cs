@@ -1,5 +1,6 @@
 using TodoApp.Application.Abstractions;
 using TodoApp.Application.Contracts.Todos;
+using FluentValidation;
 using TodoApp.Domain.Models;
 
 namespace TodoApp.Application.UseCases.Commands;
@@ -12,9 +13,12 @@ public sealed class UpdateTodoCommand
     /// Initializes a new instance of <see cref="UpdateTodoCommand"/> with the specified todo repository.
     /// </summary>
     /// <param name="todoRepository">Repository used to persist and update todo items.</param>
-    public UpdateTodoCommand(ITodoRepository todoRepository)
+    private readonly IValidator<UpdateTodoRequest> validator;
+
+    public UpdateTodoCommand(ITodoRepository todoRepository, IValidator<UpdateTodoRequest> validator)
     {
         this.todoRepository = todoRepository;
+        this.validator = validator;
     }
 
     /// <summary>
@@ -24,6 +28,8 @@ public sealed class UpdateTodoCommand
     /// <returns>`true` if the repository successfully updated the todo item, `false` otherwise.</returns>
     public async Task<bool> ExecuteAsync(UpdateTodoRequest request)
     {
+        await validator.ValidateAndThrowAsync(request);
+
         return await todoRepository.UpdateAsync(new TodoItem
         {
             Id = request.Id,

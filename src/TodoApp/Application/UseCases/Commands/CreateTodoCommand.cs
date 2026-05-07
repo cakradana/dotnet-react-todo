@@ -1,5 +1,6 @@
 using TodoApp.Application.Abstractions;
 using TodoApp.Application.Contracts.Todos;
+using FluentValidation;
 using TodoApp.Domain.Models;
 
 namespace TodoApp.Application.UseCases.Commands;
@@ -12,9 +13,12 @@ public sealed class CreateTodoCommand
     /// Initializes a new instance of <see cref="CreateTodoCommand"/> with the specified todo repository.
     /// </summary>
     /// <param name="todoRepository">Repository used to persist and retrieve todo items.</param>
-    public CreateTodoCommand(ITodoRepository todoRepository)
+    private readonly IValidator<CreateTodoRequest> validator;
+
+    public CreateTodoCommand(ITodoRepository todoRepository, IValidator<CreateTodoRequest> validator)
     {
         this.todoRepository = todoRepository;
+        this.validator = validator;
     }
 
     /// <summary>
@@ -24,6 +28,8 @@ public sealed class CreateTodoCommand
     /// <returns>A <see cref="TodoResponse"/> representing the persisted todo item, including its id, task, completion state, priority, creation timestamp, and category.</returns>
     public async Task<TodoResponse> ExecuteAsync(CreateTodoRequest request)
     {
+        await validator.ValidateAndThrowAsync(request);
+
         var todo = new TodoItem
         {
             Task = request.Task,

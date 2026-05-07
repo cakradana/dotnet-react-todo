@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using TodoApp.Application.UseCases.Commands;
 using TodoApp.Application.UseCases.Queries;
@@ -8,6 +9,8 @@ public static class ApplicationServiceCollectionExtensions
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
+        services.AddValidatorsFromAssemblyContaining<CreateTodoCommand>(includeInternalTypes: true);
+        
         services.AddTransient<GetTodosQuery>();
         services.AddTransient<GetTodoByIdQuery>();
         services.AddTransient<CreateTodoCommand>();
