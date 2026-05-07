@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -8,7 +8,10 @@ namespace TodoApp.Infrastructure.Migrations
     /// <inheritdoc />
     public partial class InitialCreate : Migration
     {
-        /// <inheritdoc />
+        /// <summary>
+        /// Creates the "Todos" table with columns: Id (INTEGER, autoincrement primary key), Task (TEXT), IsCompleted (INTEGER), Priority (TEXT), CreatedAt (TEXT), CategoryName (TEXT), and CategoryColor (TEXT).
+        /// </summary>
+        /// <param name="migrationBuilder">The <see cref="MigrationBuilder"/> used to define schema changes for the migration.</param>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -30,7 +33,10 @@ namespace TodoApp.Infrastructure.Migrations
                 });
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Reverts the migration by dropping the "Todos" table from the database.
+        /// </summary>
+        /// <param name="migrationBuilder">The builder used to construct database schema operations.</param>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
