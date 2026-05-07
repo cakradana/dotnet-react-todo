@@ -12,6 +12,9 @@ services.AddApplication();
 
 using var serviceProvider = services.BuildServiceProvider();
 
+// Initialize Database
+await serviceProvider.InitializeDatabaseAsync();
+
 var getTodosQuery = serviceProvider.GetRequiredService<GetTodosQuery>();
 var getTodoByIdQuery = serviceProvider.GetRequiredService<GetTodoByIdQuery>();
 var createTodoCommand = serviceProvider.GetRequiredService<CreateTodoCommand>();

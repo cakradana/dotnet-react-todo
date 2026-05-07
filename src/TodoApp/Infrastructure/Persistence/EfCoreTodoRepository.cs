@@ -16,7 +16,7 @@ public class EfCoreTodoRepository : ITodoRepository
 
     public async Task<List<TodoItem>> GetAllAsync()
     {
-        return await _dbContext.Todos.ToListAsync();
+        return await _dbContext.Todos.OrderBy(t => t.Id).ToListAsync();
     }
 
     public async Task<TodoItem?> GetByIdAsync(long id)

@@ -19,6 +19,7 @@ public sealed class CreateTodoCommand
         {
             Task = request.Task,
             Priority = request.Priority,
+            CreatedAt = DateTimeOffset.UtcNow,
             Category = new TodoCategory
             {
                 Name = request.Category.Name,
