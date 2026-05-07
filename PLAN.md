@@ -31,10 +31,12 @@ Kita akan tetap bertahap: console app dulu, lalu Web API, kemudian SQLite, dan R
 
 ## Current status
 
-- Console app sudah berjalan.
+- Console app sudah berjalan dengan fitur CRUD lengkap ditambah fitur "Clear Completed".
+- Pembagian layer (Clean Architecture) sudah teruji valid saat penambahan fitur baru.
 - DI sudah dipakai untuk Application dan Infrastructure.
-- Use cases dan contracts sudah dipisah.
+- Use cases dan contracts sudah dipisah secara modular.
 - Struktur repo sudah dibersihkan dari folder lama yang tidak dipakai.
+- **Siap untuk memulai implementasi Langkah 3 (Web API).**
 
 ## Relevant files
 
