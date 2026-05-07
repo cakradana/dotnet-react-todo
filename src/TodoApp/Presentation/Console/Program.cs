@@ -149,6 +149,14 @@ static void ToggleTodo(ToggleTodoCommand toggleTodoCommand)
 
 static void ClearCompleted(ClearCompletedTodosCommand clearCompletedCommand)
 {
+    Console.Write("Hapus semua todo yang sudah selesai? (y/n): ");
+    var confirm = Console.ReadLine();
+    if (!string.Equals(confirm, "y", StringComparison.OrdinalIgnoreCase))
+    {
+        Console.WriteLine("Dibatalkan.");
+        return;
+    }
+
     var count = clearCompletedCommand.Execute();
     if (count > 0)
     {
